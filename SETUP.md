@@ -49,3 +49,15 @@ Role approval or Bar Council enrolment verification for professionals; invoice P
 - Run migration_3.sql after migration_2.sql. In index.html set PAY_UPI to your UPI ID (until then the page says payment details are not configured). Payment screenshots are stored privately in lia-docs/<user id>/payment/.
 - Limits: a trial is not verified first, so someone could register extra accounts for more trials; verify before activating paid access. Real automatic payment needs a gateway such as Razorpay.
 - Test: register Professional, trial starts; in SQL set trial_until to yesterday, reload, mode shows "Trial ended"; submit proof, shows "Under review"; run the activation SQL, mode opens.
+
+## Update: Professional and Student modes are free for now
+- Payment, the 3-day trial and the UPI box are switched off (FREE_MODE=true at the top of index.html). Users still fill the proof form (Bar Council enrolment ID, or college name and roll number) and then use the mode.
+- Run migration_4.sql in the SQL Editor (after migration.sql and migration_2.sql; migration_3.sql is optional). It lets any registered, non-rejected user in on the server side.
+- You do not need PAY_UPI now. To bring payment back later: set FREE_MODE=false, add PAY_UPI, and re-run the lia_can function from migration_3.sql.
+- Test: switch to Professional, fill the form, the dashboard opens at once. Add a client; reload; it is still there.
+
+## Update: Professional and Student modes are FREE for now
+- In index.html, FREE_MODE=true hides the trial and payment screens. Users register once with proof details (Professional: Bar Council enrolment ID; Student: college name and roll number) and get access.
+- Run migration_4.sql after migrations 1, 2 and 3. Free access lasts until the date in public.lia_settings (free_until, set to 2027-05-31). Change it with: update public.lia_settings set value = '2027-12-31' where key = 'free_until'; (people who already registered keep the date they got).
+- To bring payments back later: set FREE_MODE=false (the trial and UPI payment screens are still in the file) and tell new users the fee.
+- Test: sign in, switch to Professional, fill the form, tools open at once. In Table Editor > lia_memberships the row shows status active.
